@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import authRoute from "./routes/auth.js";
+import { dbConnection } from "./config/dbConnection.js";
 
 dotenv.config();
 
@@ -12,7 +13,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: [],
+    origin: ["http://localhost:5173", process.env.FRONTEND_URL],
   })
 );
 
@@ -24,6 +25,8 @@ app.use("/api/auth", authRoute);
 
 const PORT = 4000;
 
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+dbConnection().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
 });

@@ -1,5 +1,6 @@
 import "./app.css";
 import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Home from "./pages/home/Home";
 import NoPage from "./pages/No Page/NoPage";
 import Login from "./pages/Login/Login";
@@ -16,6 +17,7 @@ const App = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
+        <Toaster position="top-right"/>
       </Router>
     </div>
   )

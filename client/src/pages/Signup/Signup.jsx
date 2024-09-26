@@ -3,10 +3,15 @@ import { IoIosPhonePortrait } from "react-icons/io";
 import { TfiEmail } from "react-icons/tfi";
 import { RiLockPasswordLine } from "react-icons/ri";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { baseUrl } from "../../utils/baseUrl"
+import toast from "react-hot-toast";
 
 
 const Signup = () => {
+
+    const navigate = useNavigate();
 
     const [viewPassword, setViewPassword] = useState(false);
     const [username, setUsername] = useState('');
@@ -16,6 +21,17 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        try {
+            let res = await axios.post(`${baseUrl}/auth/signup`, { username, email, password, phone });
+            if (res) {
+                navigate("/login");
+                toast.success(res?.data?.message);
+            }
+
+        } catch (error) {
+            toast.error(error.response.data.message);
+        }
     }
 
     return (
@@ -35,7 +51,7 @@ const Signup = () => {
                             <label htmlFor="username" className='text-gray-500 font-semibold'>Username</label>
                             <div className="flex items-center justify-center relative">
                                 <FaRegUser className="absolute left-2" />
-                                <input required onChange={(e)=>setUsername(e.target.value)} value={username} type="text" id='username' name='username' placeholder='Username' className='w-[300px] border-gray-400 border-[1px] pl-8 h-[33px] rounded-md' />
+                                <input required onChange={(e) => setUsername(e.target.value)} value={username} type="text" id='username' name='username' placeholder='Username' className='w-[300px] border-gray-400 border-[1px] pl-8 h-[33px] rounded-md' />
                             </div>
                         </div>
 
@@ -43,7 +59,7 @@ const Signup = () => {
                             <label htmlFor="email" className='text-gray-500 font-semibold'>Email</label>
                             <div className="flex items-center justify-center relative">
                                 <TfiEmail className="absolute left-2" />
-                                <input onChange={(e)=>setEmail(e.target.value)} value={email} required type="email" name="email" id="email" placeholder='Email' className='w-[300px] pl-8 h-[33px] border-gray-400 border-[1px] rounded-md' />
+                                <input onChange={(e) => setEmail(e.target.value)} value={email} required type="email" name="email" id="email" placeholder='Email' className='w-[300px] pl-8 h-[33px] border-gray-400 border-[1px] rounded-md' />
                             </div>
                         </div>
 
@@ -51,7 +67,7 @@ const Signup = () => {
                             <label htmlFor="phone" className='text-gray-500 font-semibold'>Phone</label>
                             <div className="flex items-center justify-center relative">
                                 <IoIosPhonePortrait className="absolute left-2" />
-                                <input onChange={(e)=>setPhone(e.target.value)} value={phone} required type="number" name="phone" id="phone" placeholder='Phone' className='w-[300px] border-gray-400 border-[1px] pl-8 h-[33px] rounded-md' />
+                                <input onChange={(e) => setPhone(e.target.value)} value={phone} required type="number" name="phone" id="phone" placeholder='Phone' className='w-[300px] border-gray-400 border-[1px] pl-8 h-[33px] rounded-md' />
                             </div>
                         </div>
 
@@ -59,7 +75,7 @@ const Signup = () => {
                             <label htmlFor="password" className='text-gray-500 font-semibold'>Password</label>
                             <div className="flex items-center justify-center relative">
                                 <RiLockPasswordLine onClick={() => setViewPassword((prev) => !prev)} className="absolute left-2" />
-                                <input onChange={(e)=>setPassword(e.target.value)} value={password} required type={`${viewPassword ? "text" : "password"}`} name="password" id="password" placeholder='Password' className='w-[300px] border-gray-400 border-[1px] pl-8 h-[33px] rounded-md' />
+                                <input onChange={(e) => setPassword(e.target.value)} value={password} required type={`${viewPassword ? "text" : "password"}`} name="password" id="password" placeholder='Password' className='w-[300px] border-gray-400 border-[1px] pl-8 h-[33px] rounded-md' />
                             </div>
                         </div>
 

@@ -1,16 +1,38 @@
+import axios from 'axios';
 import React, { useState } from 'react'
+import toast from 'react-hot-toast';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { TfiEmail } from 'react-icons/tfi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { baseUrl } from '../../utils/baseUrl';
 
 const Login = () => {
+
+    const navigate = useNavigate();
+
     const [viewPassword, setViewPassword] = useState(false);
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
-  
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        try {
+            const res = await axios.post(`${baseUrl}/auth/login`, { email, password });
+            const data = await res?.data;
+
+            if (data?.success) {
+                navigate("/");
+                localStorage.setItem("token", data?.token);
+                localStorage.setItem("isLoggedIn", true);
+                localStorage.setItem("userId", data?.userId);
+                toast.success(data?.message);
+            }
+
+        } catch (error) {
+            toast.error(error.response.data.message)
+        };
     }
 
     return (
@@ -30,16 +52,16 @@ const Login = () => {
                             <label htmlFor="email" className='text-gray-500 font-semibold'>Email</label>
                             <div className="flex items-center justify-center relative">
                                 <TfiEmail className="absolute left-2" />
-                                <input onChange={(e)=>setEmail(e.target.value)} value={email} required type="email" name="email" id="email" placeholder='Email' className='w-[300px] pl-8 h-[33px] border-gray-400 border-[1px] rounded-md' />
+                                <input onChange={(e) => setEmail(e.target.value)} value={email} required type="email" name="email" id="email" placeholder='Email' className='w-[300px] pl-8 h-[33px] border-gray-400 border-[1px] rounded-md' />
                             </div>
                         </div>
 
-                 
+
                         <div className='flex flex-col items-start mt-2'>
                             <label htmlFor="password" className='text-gray-500 font-semibold'>Password</label>
                             <div className="flex items-center justify-center relative">
                                 <RiLockPasswordLine onClick={() => setViewPassword((prev) => !prev)} className="absolute left-2" />
-                                <input onChange={(e)=>setPassword(e.target.value)} value={password} required type={`${viewPassword ? "text" : "password"}`} name="password" id="password" placeholder='Password' className='w-[300px] border-gray-400 border-[1px] pl-8 h-[33px] rounded-md' />
+                                <input onChange={(e) => setPassword(e.target.value)} value={password} required type={`${viewPassword ? "text" : "password"}`} name="password" id="password" placeholder='Password' className='w-[300px] border-gray-400 border-[1px] pl-8 h-[33px] rounded-md' />
                             </div>
                         </div>
 
