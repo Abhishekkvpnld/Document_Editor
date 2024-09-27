@@ -1,15 +1,17 @@
 import { useState } from "react"
 import { FiSearch } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 
 const Navbar = () => {
 
+    const navigate = useNavigate();
     const [search, setSearch] = useState("");
 
     return (
         <div className="navbar w-full h-[60px] flex items-center justify-between bg-[#f4f4f4] px-10">
-            <div className="left flex items-center justify-center gap-2">
-                <img src="./icon.ico" className="w-12 cursor-pointer h-12 rounded-full" alt="img" />
+            <div className="left flex items-center justify-center gap-2  cursor-pointer" onClick={() => navigate("/")}>
+                <img src="/icon.ico" className="w-12 h-12 rounded-full" alt="img" />
                 <h4 className="font-semibold">DocCraft</h4>
             </div>
 

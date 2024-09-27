@@ -1,6 +1,6 @@
 
 
-const Docs = ({ doc,handleDelete}) => {
+const Docs = ({ doc,openDelete}) => {
 
     return (
         <>
@@ -16,7 +16,7 @@ const Docs = ({ doc,handleDelete}) => {
                 </div>
 
                 <div className="doc-right">
-                   <img onClick={handleDelete} src="./delete.png" alt="delete" className="w-8 h-8 rounded-full bg-gray-200 p-1 transition-all hover:scale-125"/>
+                   <img onClick={openDelete} src="./delete.png" alt="delete" className="w-8 h-8 rounded-full bg-gray-200 p-1 transition-all hover:scale-125"/>
                 </div>
 
             </div>
