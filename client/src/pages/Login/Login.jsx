@@ -23,10 +23,11 @@ const Login = () => {
             const data = await res?.data;
 
             if (data?.success) {
-                navigate("/");
                 localStorage.setItem("token", data?.token);
                 localStorage.setItem("isLoggedIn", true);
                 localStorage.setItem("userId", data?.userId);
+                window.location.href("/dashboard");
+                navigate("/");
                 toast.success(data?.message);
             }
 
