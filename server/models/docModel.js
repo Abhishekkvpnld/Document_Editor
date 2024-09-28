@@ -2,7 +2,10 @@ import mongoose from "mongoose";
 
 const docSchema = new mongoose.Schema({
   title: String,
-  content: String,
+  content: {
+    type: String,
+    default: "",
+  },
   uploadedBy: String,
   date: {
     type: Date,
@@ -11,7 +14,7 @@ const docSchema = new mongoose.Schema({
   lastUpdate: {
     type: Date,
     default: Date.now,
-  }
+  },
 });
 
 const docModel = mongoose.model("Doc", docSchema);

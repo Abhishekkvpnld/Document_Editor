@@ -4,6 +4,9 @@ import Navbar from "../../components/Navbar";
 import { MdOutlineAdd } from "react-icons/md";
 import { LuSubtitles } from "react-icons/lu";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import axios from "axios";
+import { baseUrl } from "../../utils/baseUrl";
 
 
 const Home = () => {
@@ -12,8 +15,27 @@ const Home = () => {
 
   const [showCreateDoc, setShowCreateDoc] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
+  const [title, setTitle] = useState("");
 
   const handleCreateDoc = async () => {
+    if (title === "") return toast.error("Please enter title...");
+
+    try {
+      const res = await axios.post(`${baseUrl}/doc/create-doc`, {
+        userId: localStorage.getItem("userId"),
+        title: title
+      });
+      const data = await res.data;
+
+      if (data?.success) {
+        toast.success(data?.message);
+        setShowCreateDoc(false);
+        navigate(`/create-docs/${data?.docId}`);
+      }
+
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
   };
 
   return (
@@ -22,7 +44,11 @@ const Home = () => {
 
       <div className="flex items-center justify-between px-10 mt-8">
         <h1 className="text-3xl font-semibold">All Documents</h1>
-        <div onClick={() => setShowCreateDoc(true)} className="border px-5 py-2 rounded-lg text-white cursor-pointer bg-green-600 flex items-center justify-center hover:bg-green-700">
+        <div onClick={() => {
+          setShowCreateDoc(true)
+          document.getElementById("doc").focus();
+        }}
+          className="border px-5 py-2 rounded-lg text-white cursor-pointer bg-green-600 flex items-center justify-center hover:bg-green-700">
           <i className="mx-3 font-bold hover:scale-125"><MdOutlineAdd size={23} /></i>
           <button>Create New Documents</button>
         </div>
@@ -47,11 +73,11 @@ const Home = () => {
               <label htmlFor="doc" className="mt-3 text-sm text-slate-400 font-semibold">Enter A Title</label>
               <div className="flex items-center justify-end w-full relative">
                 <LuSubtitles className="absolute left-2" />
-                <input required type="email" name="doc" id="doc" placeholder='Enter Title Here...' className='w-full pl-8 h-[33px] text-lg border-gray-400 border-[1px] rounded-md' />
+                <input onChange={(e) => setTitle(e.target.value)} value={title} required type="text" name="doc" id="doc" placeholder='Enter Title Here...' className='w-full pl-8 h-[33px] text-lg border-gray-400 border-[1px] rounded-md' />
               </div>
 
               <div className="flex items-center justify-between w-full mt-3">
-                <button className="border bg-blue-700 px-4 py-1 rounded-lg hover:bg-blue-800 text-white" onClick={() => navigate("/create-docs")}>Create New Document</button>
+                <button className="border bg-blue-700 px-4 py-1 rounded-lg hover:bg-blue-800 text-white" onClick={handleCreateDoc}>Create New Document</button>
                 <button className="border bg-red-700 text-white px-4 py-1 rounded-lg hover:bg-red-800" onClick={() => setShowCreateDoc(false)}>Cancel</button>
               </div>
 
