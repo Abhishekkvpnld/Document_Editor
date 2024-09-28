@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useState } from 'react'
+import { useState } from 'react'
 import toast from 'react-hot-toast';
 import { RiLockPasswordLine } from 'react-icons/ri';
 import { TfiEmail } from 'react-icons/tfi';

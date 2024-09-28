@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Docs from "../../components/Docs";
 import Navbar from "../../components/Navbar";
 import { MdOutlineAdd } from "react-icons/md";
@@ -16,6 +16,7 @@ const Home = () => {
   const [showCreateDoc, setShowCreateDoc] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [title, setTitle] = useState("");
+  const [data, setData] = useState([])
 
   const handleCreateDoc = async () => {
     if (title === "") return toast.error("Please enter title...");
@@ -38,6 +39,26 @@ const Home = () => {
     }
   };
 
+  const getAllDocs = async () => {
+    try {
+      const res = await axios.post(`${baseUrl}/doc/get-all-docs`, {
+        userId: localStorage.getItem("userId"),
+      });
+      const data = await res.data;
+
+      if (data?.success) {
+        setData(data?.data);
+      }
+
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  }
+
+  useEffect(() => {
+    getAllDocs();
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -55,11 +76,12 @@ const Home = () => {
       </div>
 
       <div className="allDocs px-[100px] mt-6">
-        <Docs openDelete={() => setShowDelete(true)} />
-        <Docs openDelete={() => setShowDelete(true)} />
-        <Docs openDelete={() => setShowDelete(true)} />
-        <Docs openDelete={() => setShowDelete(true)} />
-        <Docs openDelete={() => setShowDelete(true)} />
+
+        {
+          data && data.map((i, index) => (
+            <Docs key={index} openDelete={() => setShowDelete(true)} setShowDelete={setShowDelete} showDelete={showDelete} doc={i} />
+          ))
+        }
       </div>
 
 
@@ -86,29 +108,6 @@ const Home = () => {
         )
       }
 
-      {showDelete &&
-        <div className="delete_doc_container  flex items-center justify-center flex-col bg-[rgb(0,0,0,0.3)] fixed bottom-0 left-0 right-0 top-0 w-screen h-screen">
-          <div className="delete_doc p-[15px] w-[35vw] rounded-lg bg-[#fff]">
-            <div className="flex items-start justify-center flex-col">
-
-              <h2 className="font-semibold px-3">Delete Document</h2>
-
-              <div className="items-start justify-around flex mt-3 w-full">
-                <img className="w-14 h-14" src="/deleteImg.png" alt="delete" />
-                <div className="flex items-start justify-start flex-col">
-                  <h3>Do You Want Delete This Document</h3>
-                  <p className="text-gray-400 text-sm">Delete/Cancel</p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-end gap-5 w-full">
-                <button className="bg-red-600 px-5 rounded-lg py-1 text-white hover:bg-red-700">Delete</button>
-                <button className="border bg-gray-400 text-white px-5 rounded-lg py-1 hover:bg-gray-500" onClick={() => setShowDelete(false)}>Cancel</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      }
     </>
   )
 }

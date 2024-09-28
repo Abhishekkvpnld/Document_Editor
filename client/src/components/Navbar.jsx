@@ -1,12 +1,34 @@
-import { useState } from "react"
+import axios from "axios";
+import { useEffect, useState } from "react"
+import toast from "react-hot-toast";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { baseUrl } from "../utils/baseUrl";
+import { username } from "../utils/username";
 
 
 const Navbar = () => {
 
     const navigate = useNavigate();
     const [search, setSearch] = useState("");
+    const [data, setData] = useState({});
+
+    const getUser = async () => {
+        try {
+            let res = await axios.post(`${baseUrl}/auth/user`, { userId: localStorage.getItem("userId") });
+            if (res?.data?.success) {
+                setData(res?.data?.data);
+            }
+
+        } catch (error) {
+            toast.error(error?.response?.data?.message);
+        }
+    }
+
+    useEffect(() => {
+        getUser();
+    }, []);
+
 
     return (
         <div className="navbar w-full h-[60px] flex items-center justify-between bg-[#f4f4f4] px-10">
@@ -22,7 +44,7 @@ const Navbar = () => {
                 </div>
 
                 <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center">
-                    <span className="font-bold text-white">AB</span>
+                    <span className="font-bold text-white">{username(data?.username)}</span>
                 </div>
             </div>
 

@@ -37,10 +37,6 @@ const CreateDocs = () => {
     }
 
 
-    const deleteDoc = async () => {
-
-    }
-
     useEffect(() => {
         getContent();
     }, []);

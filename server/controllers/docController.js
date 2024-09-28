@@ -103,3 +103,27 @@ export const deleteDoc = async (req, res) => {
     });
   }
 };
+
+export const getAllDocs = async (req, res) => {
+  try {
+    let { userId } = req.body;
+
+    let user = await User.findById(userId);
+    if (!user) throw new Error("Invalid user...🤦‍♂️");
+
+    let allDoc = await Doc.find({ uploadedBy: userId });
+
+    res.status(200).json({
+      success: true,
+      error: false,
+      data: allDoc,
+      message: "All Documents",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: true,
+      message: error.message,
+    });
+  }
+};

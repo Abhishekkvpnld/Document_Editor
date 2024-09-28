@@ -45,58 +45,100 @@ export const signup = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-    try {
-      const { email, password } = req.body;
-  
-      // Check if user exists
-      const checkUser = await User.findOne({ email });
-      if (!checkUser) {
-        return res.status(404).json({
-          success: false,
-          error: true,
-          message: "User not found...❌",
-        });
-      }
-  
-      // Compare password
-      bcrypt.compare(password, checkUser.password, (err, result) => {
-        if (err) {
-          return res.status(500).json({
-            success: false,
-            error: true,
-            message: "Password validation error...🔐",
-          });
-        }
-  
-        if (result) {
-          // Generate JWT token
-          const token = jwt.sign(
-            { email: checkUser.email, userId: checkUser._id },
-            process.env.JWT_SECRET_KEY,
-            { expiresIn: '24h' } // Optional: setting token expiration time
-          );
-  
-          return res.status(200).json({
-            success: true,
-            error: false,
-            message: "Logged in successfully...✅",
-            userId: checkUser._id,
-            token, // Send token back to client
-          });
-        } else {
-          return res.status(401).json({
-            success: false,
-            error: true,
-            message: "Invalid password...🔐",
-          });
-        }
-      });
-    } catch (error) {
-      return res.status(500).json({
+  try {
+    const { email, password } = req.body;
+
+    // Check if user exists
+    const checkUser = await User.findOne({ email });
+    if (!checkUser) {
+      return res.status(404).json({
         success: false,
         error: true,
-        message: error.message,
+        message: "User not found...❌",
       });
     }
-  };
-  
+
+    // Compare password
+    bcrypt.compare(password, checkUser.password, (err, result) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          error: true,
+          message: "Password validation error...🔐",
+        });
+      }
+
+      if (result) {
+        // Generate JWT token
+        const token = jwt.sign(
+          { email: checkUser.email, userId: checkUser._id },
+          process.env.JWT_SECRET_KEY,
+          { expiresIn: "24h" } // Optional: setting token expiration time
+        );
+
+        return res.status(200).json({
+          success: true,
+          error: false,
+          message: "Logged in successfully...✅",
+          userId: checkUser._id,
+          token, // Send token back to client
+        });
+      } else {
+        return res.status(401).json({
+          success: false,
+          error: true,
+          message: "Invalid password...🔐",
+        });
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    let { userId } = req.body;
+
+    let user = await User.findById(userId);
+    if (!user) throw new Error("User Not Found...🤦‍♂️");
+
+    res.status(200).json({
+      success: true,
+      error: false,
+      data: user
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: true,
+      message: error.message,
+    });
+  }
+};
+
+
+export const logout = async (req, res) => {
+  try {
+    let { userId } = req.body;
+
+    let user = await User.findById(userId);
+    if (!user) throw new Error("User Not Found...🤦‍♂️");
+
+    res.status(200).json({
+      success: true,
+      error: false,
+      message:"User Logged out Successfully...✅"
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: true,
+      message: error.message,
+    });
+  }
+};
