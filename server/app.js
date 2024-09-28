@@ -3,6 +3,7 @@ import cors from "cors";
 import morgan from "morgan";
 import dotenv from "dotenv";
 import authRoute from "./routes/auth.js";
+import docRoute from "./routes/doc.js";
 import { dbConnection } from "./config/dbConnection.js";
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoute);
+app.use("/api/doc", docRoute);
 
 const PORT = 4000;
 
