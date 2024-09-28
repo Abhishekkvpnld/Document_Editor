@@ -1,5 +1,5 @@
 import "./app.css";
-import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
+import { Route, Routes, BrowserRouter as Router, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Home from "./pages/home/Home";
 import NoPage from "./pages/No Page/NoPage";
@@ -9,14 +9,17 @@ import CreateDocs from "./pages/create_docs/CreateDocs";
 
 
 const App = () => {
+
+  const isLoggedIn = localStorage.getItem("isLoggedIn");
+
   return (
     <div>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={isLoggedIn ? <Home /> : <Navigate to={"/login"}/>} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="create-docs/:docId" element={<CreateDocs />} />
+          <Route path="create-docs/:docId" element={isLoggedIn ? <CreateDocs /> : <Navigate to={"/login"}/>} />
           <Route path="*" element={<NoPage />} />
         </Routes>
         <Toaster position="top-right" />

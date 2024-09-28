@@ -23,6 +23,23 @@ const Navbar = () => {
         } catch (error) {
             toast.error(error?.response?.data?.message);
         }
+    };
+
+    const handleLogout = async () => {
+        try {
+            let res = await axios.post(`${baseUrl}/auth/logout`, { userId: localStorage.getItem("userId") });
+            if (res?.data?.success) {
+                toast.success(res?.data?.message);
+            }
+
+            localStorage.removeItem("userId");
+            localStorage.removeItem("token");
+            localStorage.removeItem("isLoggedIn");
+            navigate("/login");
+
+        } catch (error) {
+            toast.error(error?.response?.data?.messsage);
+        }
     }
 
     useEffect(() => {
@@ -42,6 +59,9 @@ const Navbar = () => {
                     <i><FiSearch className="mx-2 hover:scale-125 hover:text-blue-700 hover:font-bold cursor-pointer" /></i>
                     <input placeholder="Search here..." className="bg-slate-200 rounded-lg w-full px-2 h-full" onChange={(e) => setSearch(e.target.value)} value={search} type="text" />
                 </div>
+
+                {data ? <button onClick={handleLogout} className="bg-blue-700 px-3 py-1 rounded-lg cursor-pointer text-white hover:bg-blue-800">Logout</button>
+                    : <button onClick={() => navigate("/login")} className="bg-purple-700 px-3 py-1 rounded-lg cursor-pointer text-white hover:bg-purple-800">Login</button>}
 
                 <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center">
                     <span className="font-bold text-white">{username(data?.username)}</span>

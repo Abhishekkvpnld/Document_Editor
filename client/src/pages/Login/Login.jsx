@@ -26,8 +26,8 @@ const Login = () => {
                 localStorage.setItem("token", data?.token);
                 localStorage.setItem("isLoggedIn", true);
                 localStorage.setItem("userId", data?.userId);
-                window.location.href("/dashboard");
                 navigate("/");
+                window.location.href("/dashboard");
                 toast.success(data?.message);
             }
 
