@@ -10,16 +10,15 @@ import CreateDocs from "./pages/create_docs/CreateDocs";
 
 const App = () => {
 
-  const isLoggedIn = localStorage.getItem("isLoggedIn");
 
   return (
     <div>
       <Router>
         <Routes>
-          <Route path="/" element={isLoggedIn ? <Home /> : <Navigate to={"/login"}/>} />
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="create-docs/:docId" element={isLoggedIn ? <CreateDocs /> : <Navigate to={"/login"}/>} />
+          <Route path="create-docs/:docId" element={<CreateDocs />} />
           <Route path="*" element={<NoPage />} />
         </Routes>
         <Toaster position="top-right" />

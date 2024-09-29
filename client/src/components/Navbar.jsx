@@ -28,14 +28,15 @@ const Navbar = () => {
     const handleLogout = async () => {
         try {
             let res = await axios.post(`${baseUrl}/auth/logout`, { userId: localStorage.getItem("userId") });
+            navigate("/login");
             if (res?.data?.success) {
+
+                localStorage.removeItem("isLoggedIn");
+                localStorage.removeItem("userId");
+                localStorage.removeItem("token");
+
                 toast.success(res?.data?.message);
             }
-
-            localStorage.removeItem("userId");
-            localStorage.removeItem("token");
-            localStorage.removeItem("isLoggedIn");
-            navigate("/login");
 
         } catch (error) {
             toast.error(error?.response?.data?.messsage);

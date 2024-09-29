@@ -16,7 +16,7 @@ const Home = () => {
   const [showCreateDoc, setShowCreateDoc] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [title, setTitle] = useState("");
-  const [data, setData] = useState([])
+  const [data, setData] = useState([]);
 
   const handleCreateDoc = async () => {
     if (title === "") return toast.error("Please enter title...");
