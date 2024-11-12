@@ -1,5 +1,5 @@
-import "./app.css";
-import { Route, Routes, BrowserRouter as Router, Navigate } from "react-router-dom";
+import './App.css';
+import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Home from "./pages/home/Home";
 import NoPage from "./pages/No Page/NoPage";
