@@ -79,7 +79,7 @@ const Home = () => {
 
         {
           data && data.map((i, index) => (
-            <Docs key={index} openDelete={() => setShowDelete(true)} setShowDelete={setShowDelete} showDelete={showDelete} doc={i} />
+            <Docs key={index} setShowDelete={setShowDelete} showDelete={showDelete} doc={i} removeDoc={()=>getAllDocs()} />
           ))
         }
       </div>

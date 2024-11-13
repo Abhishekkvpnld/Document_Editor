@@ -15,9 +15,13 @@ const Navbar = () => {
 
     const getUser = async () => {
         try {
-            let res = await axios.post(`${baseUrl}/auth/user`, { userId: localStorage.getItem("userId") });
-            if (res?.data?.success) {
-                setData(res?.data?.data);
+            if (localStorage.getItem("userId")) {
+                let res = await axios.post(`${baseUrl}/auth/user`, { userId: localStorage.getItem("userId") });
+                if (res?.data?.success) {
+                    setData(res?.data);
+                } else {
+                    return toast.error("Plese login first...")
+                }
             }
 
         } catch (error) {
@@ -26,20 +30,21 @@ const Navbar = () => {
     };
 
     const handleLogout = async () => {
+
         try {
             let res = await axios.post(`${baseUrl}/auth/logout`, { userId: localStorage.getItem("userId") });
             navigate("/login");
-            if (res?.data?.success) {
 
+            if (res?.data?.success) {
                 localStorage.removeItem("isLoggedIn");
                 localStorage.removeItem("userId");
                 localStorage.removeItem("token");
 
-                toast.success(res?.data?.message);
+                toast.success(res?.data?.data?.message);
             }
 
         } catch (error) {
-            toast.error(error?.response?.data?.messsage);
+            toast.error(error?.response?.data?.data?.messsage);
         }
     }
 
@@ -61,12 +66,17 @@ const Navbar = () => {
                     <input placeholder="Search here..." className="bg-slate-200 rounded-lg w-full px-2 h-full" onChange={(e) => setSearch(e.target.value)} value={search} type="text" />
                 </div>
 
-                {data ? <button onClick={handleLogout} className="bg-blue-700 px-3 py-1 rounded-lg cursor-pointer text-white hover:bg-blue-800">Logout</button>
-                    : <button onClick={() => navigate("/login")} className="bg-purple-700 px-3 py-1 rounded-lg cursor-pointer text-white hover:bg-purple-800">Login</button>}
+                {data?.success ? <button onClick={handleLogout} className="bg-blue-700 px-3 py-1 rounded-lg cursor-pointer text-white hover:bg-blue-800">Logout</button>
+                    : <button onClick={() => navigate("/login")} className="bg-purple-700 px-3 py-1 rounded-lg cursor-pointer text-white hover:bg-purple-800">Login</button>
+                }
 
-                <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center">
-                    <span className="font-bold text-white">{username(data?.username)}</span>
-                </div>
+                {
+                    data?.success && (
+                        <div className="w-10 h-10 rounded-full bg-red-600 flex items-center justify-center">
+                            <span className="font-bold text-white">{username(data?.data?.username)}</span>
+                        </div>
+                    )
+                }
             </div>
 
         </div>

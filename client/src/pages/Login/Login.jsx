@@ -11,8 +11,8 @@ const Login = () => {
     const navigate = useNavigate();
 
     const [viewPassword, setViewPassword] = useState(false);
-    const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('User@123');
+    const [email, setEmail] = useState('user@gmail.com');
 
 
     const handleSubmit = async (e) => {
